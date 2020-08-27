@@ -33,7 +33,7 @@ const start = async () => {
       process.env.NATS_URL
     );
     natsWrapper.client.on("close", () => {
-      console.log("NATS conn closed!");
+      console.log("NATS conn close d!");
       process.exit();
     });
     process.on("SIGINT", () => natsWrapper.client.close());
