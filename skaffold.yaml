@@ -1,0 +1,64 @@
+# kubectl create secret generic jwt-secret --from-literal=JWT_KEY=asdf
+# kubectl create secret generic stripe-secret --from-literal STRIPE_KEY=sk_test_51HKepdECp4JiiffRyqCNFQgB5I9p3cnDWmRVnMSTAnTW2RJ3Y3hGJOx1r7f65wGza8M7PKeYcbo1BGZbfjpJDLtH00bVk7pGCF
+# kubectl get pods
+# kubectl port-forward nats-depl-77c4ccdb98-prd9b 4222:4222
+# kubectl port-forward nats-depl-77c4ccdb98-prd9b 8222:8222
+# http://localhost:8222/streaming?subs=1
+apiVersion: skaffold/v2alpha3
+kind: Config
+deploy:
+  kubectl:
+    manifests:
+      - ./infra/k8s/*
+build:
+  local:
+    push: false
+  artifacts:
+    - image: lamsamsl/auth
+      context: auth
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "src/**/*.ts"
+            dest: .
+    - image: lamsamsl/client
+      context: client
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "**/*.js"
+            dest: .
+    - image: lamsamsl/tickets
+      context: tickets
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "src/**/*.ts"
+            dest: .
+    - image: lamsamsl/orders
+      context: orders
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "src/**/*.ts"
+            dest: .
+    - image: lamsamsl/expiration
+      context: expiration
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "src/**/*.ts"
+            dest: .
+    - image: lamsamsl/payments
+      context: payments
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "src/**/*.ts"
+            dest: .
